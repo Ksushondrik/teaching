@@ -1,20 +1,19 @@
-import math
-from log import log_info, log_warning, log_error
+from data import load_data, clean_data
+from processing import calculate_statistics
 
-def calculate_square_root(numbers: list) -> None :
-    for number in numbers :
-        try :
-            if number < 0 :
-                # Логування попередження для від'ємних чисел
-                log_warning(f"Знайдено від'ємне число: {number}. Пропускаємо.")
-                continue
-            root = math.sqrt(number)
-            log_info(f"Квадратний корінь з {number} - {root:.2f}")
-        except Exception as e :
-            # Логування помилки у випадку інших винятків
-            log_error(f"Помилка при обчисленні кореня для {number}: {e}")
+def main():
+    filename = "temperatures.txt"
+    raw_data = load_data(filename)
+    temperatures = clean_data(raw_data)
+    stats = calculate_statistics(temperatures)
 
-if __name__ == "__main__" :
-    # Припустимо, у нас є список чисел
-    numbers = [16, -4, 9, 25, 0, 4, "16"]
-    calculate_square_root(numbers)
+    if stats:
+        print(f"Minimum Temperature: {stats['min']}°C")
+        print(f"Maximum Temperature: {stats['max']}°C")
+        print(f"Average Temperature: {stats['average']:.2f}°C")
+        print(f"Median Temperature: {stats['median']:.2f}°C")
+    else:
+        print("No temperature data available.")
+
+if __name__ == "__main__":
+    main()
